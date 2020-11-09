@@ -1,0 +1,22 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "description": "Graduation project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Yihsuanlee1112/License-plate-recognition-system.git"
+  },
+  "author": "Yihsuan, Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yihsuanlee1112/License-plate-recognition-system/issues"
+  },
+  "homepage": "https://github.com/Yihsuanlee1112/License-plate-recognition-system#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
