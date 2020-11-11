@@ -4,7 +4,7 @@
   "description": "",
   "main": "mian.js",
   "scripts": {
-    "test": "electron"
+    "start": "electron"
   },
   "keywords": [],
   "author": "",
