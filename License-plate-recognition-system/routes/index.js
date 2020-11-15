@@ -31,7 +31,7 @@ router.get('/add/:n1/:n2/json', (req, res) => {
     }
     res.json(result);
 });
-
+/*
 router.get('/add/:image', (req, res) => {
     var image = parseFloat(req.params.image);
     var result=null;
@@ -42,6 +42,6 @@ router.get('/add/:image', (req, res) => {
     }
     res.jsonp(result);
 });
-
+*/
 
 module.exports = router;

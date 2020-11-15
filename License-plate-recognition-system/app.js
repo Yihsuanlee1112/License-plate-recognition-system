@@ -2,7 +2,8 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
+var bodyParser = require('body=parser');
 var logger = require('morgan');
 var multer = require('multer');
 //var ejs = require('ejs');
@@ -10,23 +11,34 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
-const port = 3000
-
-const storage = multer.diskStorage({
-	destination: './public/images/',
-	filename: function(req, file, cb){
-		cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-	}
+const port = 3000;
+//var upload = multer({dest: __dirname + '/public/images/uploads'});
+var Storage = multer.diskStorage({
+destination: function (req, file, callback) {
+callback(null, './public/images/uploads');
+},
+filename: function (req, file, callback) {
+callback(null, file.fieldname + '_' + Date.now() + '_' + file.originalname);
+}
 });
-
+//const fs = require('fs');
+/*	
+const storage = multer.diskStorage({
+	destination: './public/images/uploads',
+      cb(null, 'public')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+  })
+*/
 //init upload
 const upload = multer({
-	storage: storage,
-	 fileFilter: function(req, file, cb){
-    checkFileType(file, cb);
-  }
-}).single('myImage');
+	 storage: storage
+}).array('imgUploader', 3);
 
+
+/*
 // Check File Type
 function checkFileType(file, cb){
   // Allowed ext
@@ -43,6 +55,48 @@ function checkFileType(file, cb){
   }
 }
 
+/*
+let newPath = 'public/images/uploads/${req.file.originalname}'
+fs.rename(req.file.path, newPath, () => {
+    res.json({result: 'image uploaded successful'})
+});
+*/
+
+/*****/
+/*
+app.post('/upload', (req, res) => {
+	upload(req, res, (err) => {
+		if(err){
+			res.render('index', {
+			msg: err
+			});
+		} else {
+			if(req.file == undefined){
+        res.render('index', {
+          msg: 'Error: No File Selected!'
+        });
+      } else {
+        res.render('index', {
+          msg: 'File Uploaded!',
+          file: 'images/${req.file.filename}'
+        });
+      }
+    }
+  });
+});
+*/
+app.get("/", function(req, res) {
+	res.sendFile(__dirname + "/index.html");
+});
+	
+app.post('api/upload', function(req, res) {
+    upload(req, res, function (err) {
+	if (err) {
+	return res.end("Something went wrong!");
+	}
+	return res.end("File uploaded sucessfully!.");
+	});
+});
 //app.set('view engine', 'ejs');
 
 // view engine setup
@@ -52,7 +106,8 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+//app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
@@ -81,27 +136,6 @@ app.get("/main.js", function(req, res) {
 	res.send("This Is My Path");
 });
 */
-
-app.post('/upload', (req, res) => {
-	upload(req, res, (err) => {
-		if(err){
-			res.render('index', {
-			msg: err
-			});
-		} else {
-			if(req.file == undefined){
-        res.render('index', {
-          msg: 'Error: No File Selected!'
-        });
-      } else {
-        res.render('index', {
-          msg: 'File Uploaded!',
-          file: 'images/${req.file.filename}'
-        });
-      }
-    }
-  });
-});
 
 
 app.listen(port, () => {
