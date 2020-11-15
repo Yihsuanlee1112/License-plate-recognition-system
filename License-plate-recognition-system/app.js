@@ -1,26 +1,36 @@
 
-var createError = require('http-errors');
+//var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
+//var path = require('path');
 //var cookieParser = require('cookie-parser');
-var bodyParser = require('body=parser');
-var logger = require('morgan');
+//var bodyParser = require('body-parser');
+//var logger = require('morgan');
 var multer = require('multer');
 //var ejs = require('ejs');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
+//var indexRouter = require('./routes/index');
+//var usersRouter = require('./routes/users');
 const port = 3000;
-//var upload = multer({dest: __dirname + '/public/images/uploads'});
-var Storage = multer.diskStorage({
-destination: function (req, file, callback) {
-callback(null, './public/images/uploads');
-},
-filename: function (req, file, callback) {
-callback(null, file.fieldname + '_' + Date.now() + '_' + file.originalname);
-}
+var app = express();
+const upload = multer({dest: __dirname + '/images/uploads'});
+app.use(express.static('public'));
+app.post('/upload', upload.single('photo'), (req, res) => {
+    if(req.file) {
+        res.json(req.file);
+    }
+    else throw 'error';
 });
+ 
+//app.use(bodyParser.json());
+//var upload = multer({dest: __dirname + '/public/images/uploads'});
+/*var Storage = multer.diskStorage({
+	destination: function (req, file, callback) {
+		callback(null, './public/images/uploads');
+	},
+	filename: function (req, file, callback) {
+		callback(null, file.fieldname + '_' + Date.now() + '_' + file.originalname);
+	}
+});
+*/
 //const fs = require('fs');
 /*	
 const storage = multer.diskStorage({
@@ -33,10 +43,11 @@ const storage = multer.diskStorage({
   })
 */
 //init upload
+/*
 const upload = multer({
-	 storage: storage
+	 storage: Storage
 }).array('imgUploader', 3);
-
+*/
 
 /*
 // Check File Type
@@ -85,35 +96,38 @@ app.post('/upload', (req, res) => {
   });
 });
 */
+/*
 app.get("/", function(req, res) {
 	res.sendFile(__dirname + "/index.html");
 });
 	
-app.post('api/upload', function(req, res) {
+app.post('api/Upload', function(req, res) {
     upload(req, res, function (err) {
 	if (err) {
-	return res.end("Something went wrong!");
+		return res.end("Something went wrong!");
 	}
 	return res.end("File uploaded sucessfully!.");
 	});
 });
+*/
 //app.set('view engine', 'ejs');
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+//app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'pug');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+//app.use(logger('dev'));
+//app.use(express.json());
+//app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//app.use(express.static(path.join(__dirname, 'public')));
+
+//app.use('/', indexRouter);
+//app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
+/*
 app.use(function(req, res, next) {
   next(createError(404));
 });
@@ -139,7 +153,7 @@ app.get("/main.js", function(req, res) {
 
 
 app.listen(port, () => {
-  console.log('Example app listening at http://localhost:${port}')
+  console.log('listening to port 3000' );
 });
 
 module.exports = app;

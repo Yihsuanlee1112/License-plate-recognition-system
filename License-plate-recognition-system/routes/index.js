@@ -5,7 +5,8 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-
+module.exports = router;
+/*
 router.get('/add/:n1/:n2', (req, res) => {
     var n1 = parseFloat(req.params.n1);
     var n2 = parseFloat(req.params.n2);
@@ -31,7 +32,7 @@ router.get('/add/:n1/:n2/json', (req, res) => {
     }
     res.json(result);
 });
-/*
+
 router.get('/add/:image', (req, res) => {
     var image = parseFloat(req.params.image);
     var result=null;
