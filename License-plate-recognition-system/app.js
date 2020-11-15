@@ -1,13 +1,49 @@
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var multer = require('multer');
+//var ejs = require('ejs');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+const port = 3000
+
+const storage = multer.diskStorage({
+	destination: './public/images/',
+	filename: function(req, file, cb){
+		cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+	}
+});
+
+//init upload
+const upload = multer({
+	storage: storage,
+	 fileFilter: function(req, file, cb){
+    checkFileType(file, cb);
+  }
+}).single('myImage');
+
+// Check File Type
+function checkFileType(file, cb){
+  // Allowed ext
+  const filetypes = /jpeg|jpg|png|gif/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+
+  if(mimetype && extname){
+    return cb(null,true);
+  } else {
+    cb('Error: Images Only!');
+  }
+}
+
+//app.set('view engine', 'ejs');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,4 +74,53 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+app.set('jsonp callback name', 'callback');
+
+/*
+app.get("/main.js", function(req, res) {
+	res.send("This Is My Path");
+});
+*/
+
+app.post('/upload', (req, res) => {
+	upload(req, res, (err) => {
+		if(err){
+			res.render('index', {
+			msg: err
+			});
+		} else {
+			if(req.file == undefined){
+        res.render('index', {
+          msg: 'Error: No File Selected!'
+        });
+      } else {
+        res.render('index', {
+          msg: 'File Uploaded!',
+          file: 'images/${req.file.filename}'
+        });
+      }
+    }
+  });
+});
+
+
+app.listen(port, () => {
+  console.log('Example app listening at http://localhost:${port}')
+});
+
 module.exports = app;
+
+
+/*
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
+*/

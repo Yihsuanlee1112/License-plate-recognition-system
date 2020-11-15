@@ -2,9 +2,9 @@
   "name": "my-electron-app",
   "version": "1.0.0",
   "description": "",
-  "main": "mian.js",
+  "main": "main.js",
   "scripts": {
-    "start": "electron"
+    "start": "electron ."
   },
   "keywords": [],
   "author": "",

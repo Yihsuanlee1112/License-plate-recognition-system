@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,5 +11,117 @@
     We are using node <script>document.write(process.versions.node)</script>,
     Chrome <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
+<p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
+<p><label for="file" style="cursor: pointer;">Upload Image</label></p>
+<p><img id="output" width="200" /></p>
+
+<script>
+var loadFile = function(event) {
+	var image = document.getElementById('output');
+	image.src = URL.createObjectURL(event.target.files[0]);
+};
+</script>
+
+<form action="upload.php" method="post" enctype="multipart/form-data">
+    Select image to upload:
+    <input type="file" name="fileToUpload" id="fileToUpload">
+    <input type="submit" value="Upload Image" name="submit">
+</form>
+
+
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html>
+<script>
+	    const http = require('http');
+	    function do_calc() {
+		let n1 = document.getElementById('n1').value;
+		let n2 = document.getElementById('n2').value;
+		let url = 'http://localhost:3000/add/'+n1+'/'+n2+'/json';
+		http.get(url, (res) => {
+		    let jsonstr = '';
+		    res.on('data', (chunk) => {jsonstr+=chunk;});
+		    res.on('end', () => {
+			let o = JSON.parse(jsonstr);
+			let sum_node = document.getElementById('sum');
+			if (o.r=='ok') {
+			    sum_node.innerHTML = o.sum;
+			} else {
+			    sum_node.innerHTML = '<b>'+o.msg+'</b>';
+			}
+		    });
+		});
+	    }
+    	</script>
+<body>
+
+<form action="upload.php" method="post" enctype="multipart/form-data">
+  Select image to upload:
+  <input type="file" name="fileToUpload" id="fileToUpload">
+  <input type="submit" value="Upload Image" name="submit">
+</form>
+
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+	<title>Electron_app</title>
+    <script
+  		src="https://code.jquery.com/jquery-3.2.1.min.js"
+  		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  		crossorigin="anonymous"></script>
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js">
+  
+ 		 function do_calc() {
+			let myImage = $('#myImage').val();
+			let url = 'http://localhost:3000/add/'+ myImage;
+			$.ajax({
+		    	url:url,
+		    	jsonp:"callback",
+		    	dataType:"jsonp",
+		    	success: (res) => {
+				if (res.r=='ok') {
+/*****/				$('#myImage').text(res.upload);
+				} else {
+/*****/		    	$('#myImage').html('<b>'+res.msg+'</b>');
+				}
+		    	}
+			});
+	    }</script> 
+		<meta charset="UTF-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  
+  		<title>Node File Uploads</title>
+    </head>
+    <body>
+  <div class="container">
+    <h1>File Upload</h1>
+    <!--
+	<%= typeof msg != 'undefined' ? msg : '' %>
+	-->
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <div class="file-field input-field">
+        <div class="btn grey">
+          <span>File</span>
+          <input name="myImage" type="file">
+        </div>
+        <div class="file-path-wrapper">
+          <input class="file-path validate" type="text">
+        </div>
+      </div>
+      <button type="submit" class="btn">Submit</button>
+    </form>
+    <br>
+    <img src="<%= typeof file != 'undefined' ? file : '' %>" class="responsive-img">
+  </div> 
 </body>
 </html>
