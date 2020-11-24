@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const httpServer = http.createServer(app);
 const multer = require('multer');
-const upload = multer({dest: __dirname + '/images/uploads'});
+const upload = multer({dest: __dirname + '/public/images/uploads'});
 const port = 3000;
 const path = require('path');
 
@@ -14,7 +14,7 @@ app.post('/upload', upload.single('photo'), (req, res) => {
 	//res.send('***** Image uploaded successfully!');
 	const tempPath = req.file.path;
 	//const targetPath = path.join(__dirname, '/images/uploads/aaa.jpg');
-    var targetPath = path.join(__dirname, '/images/uploads/');
+    var targetPath = path.join(__dirname, '/public/images/uploads/');
 	var targetPath = path.join(targetPath, fileName );
 
 	fs.rename(tempPath, targetPath, err => {});
